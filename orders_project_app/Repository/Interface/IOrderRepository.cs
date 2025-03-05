@@ -6,8 +6,8 @@ namespace orders_project_app.Repository.Interface
     {
         public Task<List<Order>> GetOrders();
         public Task<Order> GetOrderById(int id);
-        public void AddOrder(Order order);
-        public void UpdateOrder(Order order);
-        public void DeleteOrder(int id);
+        public Task AddOrder(Order order);
+        public Task UpdateOrder(Order order);
+        public Task DeleteOrder(int id);
     }
 }
