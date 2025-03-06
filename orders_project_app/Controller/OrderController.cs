@@ -27,9 +27,9 @@ namespace orders_project_app.Controller
         }
 
         [HttpPut]
-        public async Task UpdateOrder(OrderCreateDto order)
+        public async Task UpdateOrder(int orderId, OrderCreateDto order)
         {
-            await orderService.UpdateOrder(order);
+            await orderService.UpdateOrder(orderId, order);
         }
 
         [HttpDelete("{id}")]
