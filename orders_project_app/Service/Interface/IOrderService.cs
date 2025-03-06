@@ -8,7 +8,7 @@ namespace orders_project_app.Service.Interface
         public Task<List<OrderDto>> GetOrders();
         public Task<OrderDto> GetOrderById(int id);
         public Task AddOrder(OrderCreateDto order);
-        public Task UpdateOrder(OrderCreateDto order);
+        public Task UpdateOrder(int orderId, OrderCreateDto order);
         public Task DeleteOrder(int id);
     }
 }
