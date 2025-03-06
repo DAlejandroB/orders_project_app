@@ -6,8 +6,8 @@ namespace orders_project_app.Repository.Interface
     {
         public Task<List<Client>> GetClients();
         public Task<Client> GetClientById(int id);
-        public void AddClient(Client client);
-        public void UpdateClient(Client client);
-        public void DeleteClient(int id);
+        public Task AddClient(Client client);
+        public Task UpdateClient(Client client);
+        public Task DeleteClient(int id);
     }
 }
