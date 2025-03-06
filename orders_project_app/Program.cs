@@ -12,10 +12,13 @@ builder.Services.AddDbContext<OrdersAppDb>(options => options.UseSqlServer(conne
 
 // Add repositories
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
 // Add services
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
+//Add controllers **Note: This is performed automatically**
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
