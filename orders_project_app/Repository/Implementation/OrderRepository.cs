@@ -10,7 +10,7 @@ namespace orders_project_app.Repository.Implementation
     {
         public async Task AddOrder(Order order)
         {
-            await appDb.Orders.FindAsync(order);
+            await appDb.Orders.AddAsync(order);
             await appDb.SaveChangesAsync();
         }
 
