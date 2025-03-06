@@ -16,19 +16,19 @@ namespace orders_project_app.Repository.Implementation
 
         public async Task DeleteClient(int id)
         {
-            Client? order = await appDb.Clients.FindAsync(id) ?? throw new EntityNotFoundException("Client not found");
-            appDb.Clients.Remove(order);
+            Client? client = await appDb.Clients.FindAsync(id) ?? throw new EntityNotFoundException("Client not found");
+            appDb.Clients.Remove(client);
             await appDb.SaveChangesAsync();
         }
 
         public async Task<Client> GetClientById(int id)
         {
-            Client? order = await appDb.Clients.FindAsync(id);
-            if (order == null)
+            Client? client = await appDb.Clients.FindAsync(id);
+            if (client == null)
             {
                 throw new EntityNotFoundException("Client not found");
             }
-            return order;
+            return client;
         }
 
         public async Task<List<Client>> GetClients()
@@ -36,14 +36,14 @@ namespace orders_project_app.Repository.Implementation
             return await appDb.Clients.ToListAsync();
         }
 
-        public async Task UpdateClient(Client order)
+        public async Task UpdateClient(Client client)
         {
-            Client? existingClient = await appDb.Clients.FindAsync(order.Id);
+            Client? existingClient = await appDb.Clients.FindAsync(client.Id);
             if (existingClient == null)
             {
                 throw new EntityNotFoundException("Client not found");
             }
-            appDb.Entry(existingClient).CurrentValues.SetValues(order);
+            appDb.Entry(existingClient).CurrentValues.SetValues(client);
             await appDb.SaveChangesAsync();
         }
     }
