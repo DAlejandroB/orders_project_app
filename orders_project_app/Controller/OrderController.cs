@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using orders_project_app.Model;
+using orders_project_app.Model.Dto;
 using orders_project_app.Service.Interface;
 
 namespace orders_project_app.Controller
@@ -9,25 +9,25 @@ namespace orders_project_app.Controller
     public class OrderController(IOrderService orderService) : ControllerBase
     {
         [HttpGet]
-        public async Task<List<Order>> GetOrders()
+        public async Task<List<OrderDto>> GetOrders()
         {
             return await orderService.GetOrders();
         }
 
         [HttpGet("{id}")]
-        public async Task<Order> GetOrderById(int id)
+        public async Task<OrderDto> GetOrderById(int id)
         {
             return await orderService.GetOrderById(id);
         }
 
         [HttpPost]
-        public async Task AddOrder(Order order)
+        public async Task AddOrder(OrderCreateDto order)
         {
             await orderService.AddOrder(order);
         }
 
         [HttpPut]
-        public async Task UpdateOrder(Order order)
+        public async Task UpdateOrder(OrderCreateDto order)
         {
             await orderService.UpdateOrder(order);
         }
