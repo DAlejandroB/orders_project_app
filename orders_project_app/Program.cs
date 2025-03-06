@@ -13,10 +13,13 @@ builder.Services.AddDbContext<OrdersAppDb>(options => options.UseSqlServer(conne
 // Add repositories
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IStockItemRepository, StockItemRepository>();
 
 // Add services
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IStockItemService, StockItemService>();
 
 //Add controllers **Note: This is performed automatically**
 builder.Services.AddControllers();
