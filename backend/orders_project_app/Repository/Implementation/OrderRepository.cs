@@ -33,7 +33,9 @@ namespace orders_project_app.Repository.Implementation
 
         public async Task<List<Order>> GetOrders()
         {
-            return await appDb.Orders.ToListAsync();
+            return await appDb.Orders
+                .Include(o => o.OrderItems)
+                .ToListAsync();
         }
 
         public async Task UpdateOrder(Order order)

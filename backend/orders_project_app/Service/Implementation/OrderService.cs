@@ -14,16 +14,19 @@ namespace orders_project_app.Service.Implementation
         public async Task<List<OrderDto>> GetOrders()
         {
             List<Order> orders = await orderRepository.GetOrders();
-            return orders.Select(order => new OrderDto
+            return orders.Select(order =>
+            {
+                return new OrderDto
                 {
                     Id = order.Id,
                     OrderDateTime = order.OrderDateTime,
-                    OrderItems = order.OrderItems.Select(orderItem => orderItem.Id).ToList(),
+                    OrderItems = order.OrderItems.Select(oi => oi.Id).ToList(),
                     TotalPrice = order.TotalPrice,
                     ClientId = order.ClientId,
                     Status = order.Status,
                     Type = order.Type
-                }).ToList();
+                };
+            }).ToList();
         }
 
         public async Task<OrderDto> GetOrderById(int id)
@@ -44,18 +47,17 @@ namespace orders_project_app.Service.Implementation
         public async Task AddOrder(OrderCreateDto order)
         {
             Client orderClient = await GetClient(order.ClientId);
-            List<OrderItem> orderItems = await GetOrderItems(order.OrderItems);
-            decimal totalPrice = orderItems.Sum(orderItem => orderItem.TotalPrice);
             Order orderEntity = new Order
             {
                 OrderDateTime = DateTime.Now,
-                OrderItems = orderItems,
-                TotalPrice = totalPrice,
                 ClientId = order.ClientId,
                 Client = orderClient,
                 Status = order.Status,
                 Type = order.Type
             };
+
+            List<OrderItem> orderItems = await GetOrderItems(order, orderEntity);
+            decimal totalPrice = orderItems.Sum(orderItem => orderItem.TotalPrice);
 
             // Set order reference to orderItems
             foreach (OrderItem orderItem in orderItems)
@@ -63,6 +65,8 @@ namespace orders_project_app.Service.Implementation
                 orderItem.Order = orderEntity;
             }
 
+            orderEntity.OrderItems = orderItems;
+            orderEntity.TotalPrice = totalPrice;
             //Persist order
             await orderRepository.AddOrder(orderEntity);
         }
@@ -74,7 +78,7 @@ namespace orders_project_app.Service.Implementation
 
             existingOrder.Status = order.Status;
             existingOrder.Type = order.Type;
-            var orderItems = await GetOrderItems(order.OrderItems);
+            var orderItems = await GetOrderItems(order, existingOrder);
             existingOrder.TotalPrice = orderItems.Sum(o => o.TotalPrice);
             existingOrder.OrderItems = orderItems;
 
@@ -96,11 +100,11 @@ namespace orders_project_app.Service.Implementation
             await orderRepository.DeleteOrder(id);
         }
 
-        private async Task<List<OrderItem>> GetOrderItems(List<OrderItemDto> orderItemDtos)
+        private async Task<List<OrderItem>> GetOrderItems(OrderCreateDto orderCreateDto, Order orderEntity)
         {
             List<OrderItem> orderItems = [];
 
-            foreach (OrderItemDto orderItemDto in orderItemDtos)
+            foreach (OrderItemDto orderItemDto in orderCreateDto.OrderItems)
             {
                 StockItem stockItem = await stockItemRepository.GetStockItemById(orderItemDto.ItemId);
                 if (stockItem == null)
@@ -109,11 +113,15 @@ namespace orders_project_app.Service.Implementation
                 }
                 OrderItem orderItem = new OrderItem
                 {
-                    Id = stockItem.Id,
+                    Order = orderEntity,
                     Name = stockItem.Name,
                     TotalPrice = stockItem.UnitPrice * orderItemDto.Quantity,
                     Quantity = orderItemDto.Quantity
                 };
+                if(stockItem.Quantity < orderItemDto.Quantity)
+                {
+                    throw new InsufficientStockException($"Insufficient stock for item '{stockItem.Name}'");
+                }
                 stockItem.Quantity -= orderItemDto.Quantity;
                 orderItems.Add(orderItem);
             }
