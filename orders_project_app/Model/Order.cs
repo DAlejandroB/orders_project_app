@@ -8,7 +8,7 @@ namespace orders_project_app.Model
     {
         public int Id { get; set; }
         public DateTime OrderDateTime { get; set; }
-        public required List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         [Precision(18, 2)]
         public decimal TotalPrice { get; set; }
         public int ClientId { get; set; }
