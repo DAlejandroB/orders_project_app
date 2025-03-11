@@ -1,12 +1,6 @@
-import Clients from './components/Clients';
-import Header from './components/Header';
-import Orders from './components/Orders';
-
 export default function Page() {
-  return <div>
-    <Header/>
-    <h1>Hello, Next.js!</h1>
-    <Clients/>
-    <Orders/>
-  </div>
+  return (
+  <div className="flex justify-center items-center h-screen">
+    This is the main page
+  </div>)
 }
